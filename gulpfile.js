@@ -68,6 +68,16 @@ gulp.task('scripts', ['clean'], function() {
       errorHandler: handleError
     }))
     .pipe(concat('select.js'))
+    .pipe(header(
+        '(function(mod) {\n' +
+        'if (typeof exports == "object" && typeof module == "object") // CommonJS\n' +
+        '  module.exports = mod(require("angular"));\n' +
+        'else if (typeof define == "function" && define.amd) // AMD\n' +
+        '  return define(["angular"], mod);\n' +
+        'else // Plain browser env\n' +
+        '  mod(angular);\n' +
+        '})(function (angular) {\n"use strict";\n\n'))
+    .pipe(footer('\n});'))
     .pipe(header(config.banner, {
       timestamp: (new Date()).toISOString(), pkg: config.pkg
     }))
